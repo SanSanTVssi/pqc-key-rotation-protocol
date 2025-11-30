@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PqcKeyRotationProtocol", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PqcKeyRotationProtocolTests", "PqcKeyRotationProtocolTests\PqcKeyRotationProtocolTests.csproj", "{6C07F276-D55D-4DF1-B90E-48D2E1C40F1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PqcKeyRotationProtocol.Cli", "PqcKeyRotationProtocol.Cli\PqcKeyRotationProtocol.Cli.csproj", "{6D425B5D-2F27-4462-995A-A185A501B250}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6C07F276-D55D-4DF1-B90E-48D2E1C40F1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C07F276-D55D-4DF1-B90E-48D2E1C40F1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C07F276-D55D-4DF1-B90E-48D2E1C40F1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D425B5D-2F27-4462-995A-A185A501B250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D425B5D-2F27-4462-995A-A185A501B250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D425B5D-2F27-4462-995A-A185A501B250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D425B5D-2F27-4462-995A-A185A501B250}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

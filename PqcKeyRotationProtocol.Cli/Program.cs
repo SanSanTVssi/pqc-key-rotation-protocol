@@ -8,7 +8,7 @@ var clientContainer = new DiRegistry().Register(
         ApplicationMode.Client, 
         new IPEndPoint(IPAddress.Loopback, 5000),
         new IPEndPoint(IPAddress.Loopback, 5001)
-        ));
+    ));
 
 var serverContainer = new DiRegistry().Register(new AppConfig(
     ApplicationMode.Server, 
