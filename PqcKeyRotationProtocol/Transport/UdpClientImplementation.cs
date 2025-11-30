@@ -6,12 +6,17 @@ namespace PqcKeyRotationProtocol.Transport;
 
 public class UdpClientImplementation(IProvider<AppConfig> configProvider) : IUdpClient
 {
+    private readonly IPEndPoint m_remote 
+        = (configProvider.Provide().Mode == ApplicationMode.Client 
+            ? configProvider.Provide().ClientEp 
+            : configProvider.Provide().ServerEp)!;
+    
     private readonly UdpClient m_client = new(
-        new IPEndPoint(IPAddress.Loopback, 
-            configProvider.Provide().Mode == ApplicationMode.Client ? 5000 : 5001)
-    );
-
-    private readonly IPEndPoint m_remote = new(IPAddress.Loopback, configProvider.Provide().Mode == ApplicationMode.Client ? 5001 : 5000);
+        (configProvider.Provide().Mode == ApplicationMode.Client 
+            ? configProvider.Provide().ServerEp 
+            : configProvider.Provide().ClientEp)!
+            );
+    
     public IPEndPoint Remote => m_remote;
 
     public Task<int> SendAsync(byte[] datagram, int bytes, IPEndPoint? endPoint) 

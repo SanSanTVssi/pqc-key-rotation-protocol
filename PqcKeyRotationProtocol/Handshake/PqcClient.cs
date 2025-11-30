@@ -4,21 +4,31 @@ using PqcKeyRotationProtocol.Crypto;
 
 namespace PqcKeyRotationProtocol.Handshake;
 
+public record PqcHsResponse(byte[]? SharedSecret);
+
 public sealed class PqcClient(IKemWrapper kem) : IHandshakeParticipant
 {
-    private readonly IKemWrapper m_kem = kem;
     private byte[]? m_sharedSecret;
     private byte[]? m_nonce;
     private byte[]? m_serverNonce;
 
+    private TaskCompletionSource<PqcHsResponse>? m_tcs;
+
     public byte[] SharedSecret => m_sharedSecret ?? throw new InvalidOperationException();
 
     public event Action<object>? Send;
-
-    public void Start()
+    
+    public Task<PqcHsResponse> SendHandshakeAsync()
     {
+        if (m_tcs != null)
+            throw new InvalidOperationException("Handshake already in progress.");
+
+        m_tcs = new TaskCompletionSource<PqcHsResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
+        
         m_nonce = RandomNumberGenerator.GetBytes(16);
         Send?.Invoke(new ClientHello(m_nonce));
+        
+        return m_tcs.Task;
     }
 
     public void OnMessage(object message)
@@ -26,19 +36,32 @@ public sealed class PqcClient(IKemWrapper kem) : IHandshakeParticipant
         switch (message)
         {
             case ServerHello serverHello:
+            {
                 m_serverNonce = serverHello.ServerNonce;
-                var enc = m_kem.Encapsulate(serverHello.ServerPublicKey);
+
+                var enc = kem.Encapsulate(serverHello.ServerPublicKey);
                 m_sharedSecret = enc.SharedSecret;
+                
                 Send?.Invoke(new ClientKeyShare(enc.CipherText));
+                
                 var mac = ComputeMac(m_sharedSecret, "client finished");
                 Send?.Invoke(new Finished(mac));
+
                 break;
+            }
+
             case Finished finished:
+            {
                 if (!VerifyMac(finished.Mac, m_sharedSecret!, "server finished"))
                 {
-                    throw new CryptographicException("Server MAC verification failed");
+                    m_tcs?.TrySetException(new CryptographicException("Server MAC verification failed"));
+                    return;
                 }
+                
+                m_tcs?.TrySetResult(new PqcHsResponse(m_sharedSecret));
+
                 break;
+            }
         }
     }
 

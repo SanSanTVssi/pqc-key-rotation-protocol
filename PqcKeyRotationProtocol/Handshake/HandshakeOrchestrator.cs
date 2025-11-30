@@ -22,9 +22,11 @@ public sealed class HandshakeOrchestrator
                 server.Send += async msg => await m_transport.SendAsync(msg);
                 break;
         }
+
+        _ = StartAsync();
     }
 
-    public async Task StartAsync()
+    private async Task StartAsync()
     {
         while (!m_cts.IsCancellationRequested)
         {

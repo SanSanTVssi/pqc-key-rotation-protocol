@@ -24,5 +24,4 @@ var serverParticipant = serverContainer.GetInstance<IHandshakeParticipant>();
 var clientParticipant = clientContainer.GetInstance<IHandshakeParticipant>();
 
 Console.WriteLine(
-    $"Shared equal: {Convert.ToHexString(clientParticipant.SharedSecret) == Convert.ToHexString(serverParticipant.SharedSecret)}," +
-    $"Shared secret: {Convert.ToHexString(clientParticipant.SharedSecret)}");
+    $"Shared equal: {Convert.ToHexString(clientParticipant.SharedSecret) == Convert.ToHexString(serverParticipant.SharedSecret)}");

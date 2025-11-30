@@ -9,10 +9,10 @@ namespace PqcKeyRotationProtocol.Di;
 public class DiRegistry
 {
     public static Container? Container { get; private set; }
-    private readonly Container m_container = new();
+    private readonly Container? m_container = new();
     private bool m_initialized;
 
-    public Container Register(ApplicationMode mode)
+    public Container? Register(ApplicationMode mode)
     {
         if (m_initialized) return m_container;
 
