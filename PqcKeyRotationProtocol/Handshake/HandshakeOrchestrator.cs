@@ -28,10 +28,17 @@ public sealed class HandshakeOrchestrator
 
     private async Task StartAsync()
     {
-        while (!m_cts.IsCancellationRequested)
+        try
         {
-            var msg = await m_transport.ReceiveAsync(m_cts.Token);
-            m_participant.OnMessage(msg);
+            while (!m_cts.IsCancellationRequested)
+            {
+                var msg = await m_transport.ReceiveAsync(m_cts.Token);
+                m_participant.OnMessage(msg);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // ignore
         }
     }
 

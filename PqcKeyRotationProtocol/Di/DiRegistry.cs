@@ -9,14 +9,15 @@ namespace PqcKeyRotationProtocol.Di;
 public class DiRegistry
 {
     public static Container? Container { get; private set; }
-    private readonly Container? m_container = new();
-    private bool m_initialized;
+    private Container? m_container;
 
-    public Container? Register(ApplicationMode mode)
+    public Container Register(AppConfig config)
     {
-        if (m_initialized) return m_container;
+        if (m_container != null) return m_container;
 
-        m_container.RegisterSingleton<IProvider<AppConfig>>(() => new AppConfigProvider(mode));
+        m_container = new();
+        
+        m_container.RegisterSingleton<IProvider<AppConfig>>(() => new AppConfigProvider(config));
         m_container.RegisterSingleton<PqcClient>();
         m_container.RegisterSingleton<PqcServer>();
         m_container.Register<IHandshakeParticipant>(() =>
@@ -37,10 +38,10 @@ public class DiRegistry
         m_container.RegisterSingleton<HandshakeOrchestrator>();
         
         m_container.Verify();
-        
-        m_initialized = true;
         Container = m_container;
 
         return m_container;
     }
+
+    public void Dispose() => Container!.Dispose();
 }

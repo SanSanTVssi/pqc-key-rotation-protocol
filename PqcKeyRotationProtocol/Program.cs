@@ -1,10 +1,20 @@
-﻿using PqcKeyRotationProtocol.Config;
+﻿using System.Net;
+using PqcKeyRotationProtocol.Config;
 using PqcKeyRotationProtocol.Di;
 using PqcKeyRotationProtocol.Handshake;
-using PqcKeyRotationProtocol.Transport;
 
-var clientContainer = new DiRegistry().Register(ApplicationMode.Client);
-var serverContainer = new DiRegistry().Register(ApplicationMode.Server);
+var clientContainer = new DiRegistry().Register(
+    new AppConfig(
+        ApplicationMode.Client, 
+        new IPEndPoint(IPAddress.Loopback, 5000),
+        new IPEndPoint(IPAddress.Loopback, 5001)
+        ));
+
+var serverContainer = new DiRegistry().Register(new AppConfig(
+    ApplicationMode.Server, 
+    new IPEndPoint(IPAddress.Loopback, 5000),
+    new IPEndPoint(IPAddress.Loopback, 5001)
+));
 
 await Task.Delay(200);
 
