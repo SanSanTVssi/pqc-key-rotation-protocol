@@ -1,7 +1,11 @@
+using System.Net;
+
 namespace PqcKeyRotationProtocol.Config;
 
-public enum ApplicationMode
+public class AppConfigProvider(AppConfig config) : IProvider<AppConfig>
 {
-    Server,
-    Client,
+    public AppConfig Provide()
+    {
+        return config;
+    }
 }
